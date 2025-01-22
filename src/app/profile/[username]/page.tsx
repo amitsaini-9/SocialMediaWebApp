@@ -10,11 +10,11 @@ import ProfilePageClient from "./ProfilePageClient";
 export async function generateMetadata({
   params,
 }: {
-  params: { username: string };
+  params: Promise<{ username: string }>; // Explicitly typed as Promise
 }) {
-  const { username } = params; // No need to await params here
-
+  const { username } = await params; // Await the params
   const user = await getProfileByUsername(username);
+
   if (!user) return;
 
   return {
@@ -23,8 +23,12 @@ export async function generateMetadata({
   };
 }
 
-async function ProfilePageServer({ params }: { params: { username: string } }) {
-  const { username } = params; // No need to await params here
+async function ProfilePageServer({
+  params,
+}: {
+  params: Promise<{ username: string }>; // Match the Promise type
+}) {
+  const { username } = await params; // Await the params
   const user = await getProfileByUsername(username);
 
   if (!user) notFound();
