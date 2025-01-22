@@ -12,7 +12,7 @@ export async function generateMetadata({
 }: {
   params: { username: string };
 }) {
-  const { username } = await params; // Await `params` here
+  const { username } = params; // No need to await params here
 
   const user = await getProfileByUsername(username);
   if (!user) return;
@@ -24,7 +24,7 @@ export async function generateMetadata({
 }
 
 async function ProfilePageServer({ params }: { params: { username: string } }) {
-  const { username } = await params; // Await `params` here
+  const { username } = params; // No need to await params here
   const user = await getProfileByUsername(username);
 
   if (!user) notFound();
