@@ -22,10 +22,13 @@ import { useAuth, SignInButton, SignOutButton } from "@clerk/nextjs";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 
-function MobileNavbar() {
+function MobileNavbar({ profileUrl }: { profileUrl: string }) {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const { isSignedIn } = useAuth();
   const { theme, setTheme } = useTheme();
+  const handleSignInClick = () => {
+    setShowMobileMenu(false);
+  };
 
   return (
     <div className="flex md:hidden items-center space-x-2">
@@ -79,7 +82,7 @@ function MobileNavbar() {
                   className="flex items-center gap-3 justify-start"
                   asChild
                 >
-                  <Link href="/profile">
+                  <Link href={profileUrl}>
                     <UserIcon className="w-4 h-4" />
                     Profile
                   </Link>
@@ -96,7 +99,11 @@ function MobileNavbar() {
               </>
             ) : (
               <SignInButton mode="modal">
-                <Button variant="default" className="w-full">
+                <Button
+                  variant="default"
+                  className="w-full"
+                  onClick={handleSignInClick}
+                >
                   Sign In
                 </Button>
               </SignInButton>

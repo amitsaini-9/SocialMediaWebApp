@@ -4,10 +4,23 @@ import DesktopNavbar from "./DesktopNavbar";
 import MobileNavbar from "./MobileNavbar";
 import { currentUser } from "@clerk/nextjs/server";
 import { syncUser } from "@/actions/user.action";
+import { get } from "http";
 
 async function NavBar() {
   const user = await currentUser();
-  if (user) await syncUser();
+  if (user) {
+    await syncUser();
+  }
+  const getUserProfileUrl = ({ user }: { user: any }) => {
+    if (!user) return "/profile";
+
+    const username =
+      user.username ||
+      (user.emailAddresses[0]?.emailAddress?.split("@")[0] ?? "default");
+
+    return `/profile/${username}`;
+  };
+  const profileUrl = getUserProfileUrl({ user });
 
   return (
     <nav className="sticky top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
@@ -23,7 +36,7 @@ async function NavBar() {
           </div>
 
           <DesktopNavbar />
-          <MobileNavbar />
+          <MobileNavbar profileUrl={profileUrl} />
         </div>
       </div>
     </nav>
